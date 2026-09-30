@@ -40,8 +40,16 @@ catch { Report 'write inside the project' 'blocked' }
 try { New-Item -ItemType File -Force -Path $OutsideFile -ErrorAction Stop | Out-Null; Report 'write outside the project (profile)' 'ALLOWED' }
 catch { Report 'write outside the project (profile)' 'blocked' }
 
-foreach ($h in 'api.github.com', 'example.com') {
-    $code = & curl.exe -s -o NUL -w '%{http_code}' --max-time 8 "https://$h/" 2>$null
+function Probe([string] $label, [string[]] $extra, [string] $url) {
+    $o = & curl.exe -sS -o NUL -w '%{http_code} via %{remote_ip}:%{remote_port}' --max-time 8 @extra $url 2>&1
     $rc = $LASTEXITCODE
-    if ($rc -eq 0 -and $code -ne '000') { Report "HTTPS to $h" "REACHABLE ($code)" } else { Report "HTTPS to $h" "blocked (curl rc=$rc)" }
+    $line = (($o | Out-String).Trim() -replace '\s+', ' ')
+    if ($line.Length -gt 110) { $line = $line.Substring(0, 110) + '...' }
+    if ($rc -eq 0) { Report $label "REACHABLE ($line)" } else { Report $label "blocked (curl rc=$rc: $line)" }
 }
+Probe 'HTTPS to api.github.com' @() 'https://api.github.com/'
+Probe 'HTTPS to example.com' @() 'https://example.com/'
+Probe 'HTTPS to api.github.com, no revocation check' @('--ssl-no-revoke') 'https://api.github.com/'
+
+# Hold one slow connection open so the sampler outside can see who owns it.
+& curl.exe -s -o NUL --max-time 6 --limit-rate 2k --ssl-no-revoke 'https://api.github.com/meta' 2>$null | Out-Null
