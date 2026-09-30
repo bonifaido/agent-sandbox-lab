@@ -45,7 +45,7 @@ function Probe([string] $label, [string[]] $extra, [string] $url) {
     $rc = $LASTEXITCODE
     $line = (($o | Out-String).Trim() -replace '\s+', ' ')
     if ($line.Length -gt 110) { $line = $line.Substring(0, 110) + '...' }
-    if ($rc -eq 0) { Report $label "REACHABLE ($line)" } else { Report $label "blocked (curl rc=$rc: $line)" }
+    if ($rc -eq 0) { Report $label "REACHABLE ($line)" } else { Report $label "blocked (curl rc=${rc}: $line)" }
 }
 Probe 'HTTPS to api.github.com' @() 'https://api.github.com/'
 Probe 'HTTPS to example.com' @() 'https://example.com/'
