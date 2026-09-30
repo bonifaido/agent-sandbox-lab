@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['windows/run-copilot.ps1', 'windows/checks.ps1', '.github/workflows/copilot-windows.yml']
+    paths: ['windows/run-copilot.ps1', 'windows/checks.ps1', 'windows/checks.cmd', '.github/workflows/copilot-windows.yml']
 
 permissions:
   contents: read

@@ -39,6 +39,8 @@ Set-Content -Path (Join-Path $cp 'settings.json') -Value @'
 # A wrapper with the real user's paths baked in, so the agent runs one plain command.
 Copy-Item (Join-Path $root 'checks.ps1') (Join-Path $ws 'checks.ps1')
 Set-Content -Path (Join-Path $ws 'run-checks.ps1') -Value "& `"$ws\checks.ps1`" -GhFile `"$ghFile`" -SshDir `"$sshDir`" -OutsideFile `"$outside`""
+Copy-Item (Join-Path $root 'checks.cmd') (Join-Path $ws 'checks.cmd')
+Set-Content -Path (Join-Path $ws 'run-checks.cmd') -Value "@call `"%~dp0checks.cmd`" `"$ghFile`" `"$sshDir`" `"$outside`""
 
 $os = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
 $versions = "copilot $(& copilot --version 2>&1 | Select-Object -First 1) | $($os.ProductName) $($os.DisplayVersion) build $($os.CurrentBuild).$($os.UBR) | $env:PROCESSOR_ARCHITECTURE | runner $env:ImageOS $env:ImageVersion"
@@ -75,6 +77,13 @@ $summary += Invoke-Sampled 'plain' { & powershell.exe -NoProfile -ExecutionPolic
 $prompt = 'Run exactly this shell command once with your shell tool, then reply with its raw output only, unchanged: powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run-checks.ps1'
 $summary += Invoke-Sampled 'copilot-sandbox' {
     & copilot --experimental --no-ask-user --allow-tool='shell(powershell.exe:*)' --allow-tool='shell(powershell:*)' -p $prompt 2>&1
+}
+# PowerShell may not be supported in the sandbox on some Windows builds; try cmd.exe too.
+if ($env:ImageOS -like 'win11*') {
+    $cmdPrompt = 'Run exactly this shell command once with your shell tool, then reply with its raw output only, unchanged: cmd.exe /d /c run-checks.cmd'
+    $summary += Invoke-Sampled 'copilot-sandbox-cmd' {
+        & copilot --experimental --no-ask-user --allow-tool='shell(cmd.exe:*)' --allow-tool='shell(cmd:*)' -p $cmdPrompt 2>&1
+    }
 }
 
 Remove-Item -Force -ErrorAction SilentlyContinue $outside, (Join-Path $cp 'settings.json')
