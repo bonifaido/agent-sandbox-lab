@@ -50,6 +50,15 @@ function Probe([string] $label, [string[]] $extra, [string] $url) {
 Probe 'HTTPS to api.github.com' @() 'https://api.github.com/'
 Probe 'HTTPS to example.com' @() 'https://example.com/'
 Probe 'HTTPS to api.github.com, no revocation check' @('--ssl-no-revoke') 'https://api.github.com/'
+Probe 'HTTPS to api.github.com, ignoring proxy vars' @('--noproxy', '*') 'https://api.github.com/'
+Probe 'plain HTTP to example.com' @() 'http://example.com/'
+
+# Node brings its own TLS stack (OpenSSL) and ignores proxy variables by default.
+$js = "require('https').get('https://api.github.com/',{headers:{'user-agent':'lab'}},r=>{console.log('HTTP '+r.statusCode+' via '+r.socket.remoteAddress);process.exit(0)}).on('error',e=>{console.log('error '+e.code);process.exit(1)})"
+$n = & node -e $js 2>&1; $rc = $LASTEXITCODE
+$line = (($n | Out-String).Trim() -replace '\s+', ' ')
+if ($rc -eq 0) { Report 'HTTPS to api.github.com from node' "REACHABLE ($line)" } else { Report 'HTTPS to api.github.com from node' "blocked ($line)" }
+Report 'proxy variables seen' ((Get-ChildItem env: | Where-Object { $_.Name -match '^(https?|all)_proxy$' } | ForEach-Object { "$($_.Name)=$($_.Value)" }) -join ' ')
 
 # Hold one slow connection open so the sampler outside can see who owns it.
 & curl.exe -s -o NUL --max-time 6 --limit-rate 2k --ssl-no-revoke 'https://api.github.com/meta' 2>$null | Out-Null

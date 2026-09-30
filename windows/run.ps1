@@ -41,8 +41,7 @@ foreach ($name in $runs.Keys) {
         param($ips, $file)
         while ($true) {
             Get-NetTCPConnection -RemotePort 443 -ErrorAction SilentlyContinue |
-                Where-Object { $ips -contains $_.RemoteAddress } |
-                ForEach-Object { $p = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; if ($p) { "$($p.ProcessName) pid=$($p.Id)" } } |
+                ForEach-Object { $p = Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; if ($p) { "$($p.ProcessName) $($_.RemoteAddress)" } } |
                 Add-Content -Path $file
             Start-Sleep -Milliseconds 100
         }
@@ -58,7 +57,10 @@ foreach ($name in $runs.Keys) {
     Pop-Location
     Start-Sleep -Seconds 1
     Stop-Job $sampler; Remove-Job $sampler
-    $owners = if (Test-Path $ownersFile) { (Get-Content $ownersFile | ForEach-Object { ($_ -split ' ')[0] } | Sort-Object -Unique) -join ',' } else { 'none' }
+    # Owners of connections to any address the probes reported for api.github.com
+    $seen = @(($out | Out-String) | Select-String -AllMatches -Pattern 'api\.github\.com.*?via ([0-9.]+)' | ForEach-Object { $_.Matches } | ForEach-Object { $_.Groups[1].Value }) + $ghIps | Sort-Object -Unique
+    $owners = if (Test-Path $ownersFile) { (Get-Content $ownersFile | Where-Object { $seen -contains (($_ -split ' ')[1]) } | ForEach-Object { ($_ -split ' ')[0] } | Sort-Object -Unique) -join ',' } else { '' }
+    if (-not $owners) { $owners = 'none seen' }
     $block = @("=== $name (exit $exit) ===") + ($out | ForEach-Object { "$_" }) + @(('{0,-46} {1}' -f 'owner of the api.github.com connection', $owners), '')
     $block | Tee-Object -FilePath (Join-Path $OutDir "$name.txt") | Write-Output
     $summary += $block
