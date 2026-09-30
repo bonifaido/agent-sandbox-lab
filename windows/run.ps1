@@ -52,7 +52,7 @@ foreach ($name in $runs.Keys) {
     $out = if ($runs[$name].Count -eq 0) {
         & powershell.exe @psArgs 2>&1
     } else {
-        & codex @($runs[$name]) powershell.exe @psArgs 2>&1
+        & codex.cmd @($runs[$name]) powershell.exe @psArgs 2>&1
     }
     $exit = $LASTEXITCODE
     Pop-Location
@@ -66,7 +66,7 @@ foreach ($name in $runs.Keys) {
 Remove-Item -Force -ErrorAction SilentlyContinue $outside
 cmdkey /delete:riptides-canary | Out-Null
 
-$versions = "codex $(& codex --version 2>&1) | $((Get-CimInstance Win32_OperatingSystem).Caption) $([Environment]::OSVersion.Version) | runner $env:ImageOS $env:ImageVersion"
+$versions = "codex $(& codex.cmd --version 2>&1) | $((Get-CimInstance Win32_OperatingSystem).Caption) $([Environment]::OSVersion.Version) | runner $env:ImageOS $env:ImageVersion"
 $versions | Tee-Object -FilePath (Join-Path $OutDir 'versions.txt')
 if ($env:GITHUB_STEP_SUMMARY) {
     @('```', $versions, '') + $summary + @('```') | Add-Content -Path $env:GITHUB_STEP_SUMMARY

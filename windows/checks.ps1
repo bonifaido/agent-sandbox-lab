@@ -7,17 +7,17 @@ param(
     [Parameter(Mandatory)] [string] $OutsideFile
 )
 $ErrorActionPreference = 'Continue'
-function R([string] $name, [string] $value) { '{0,-46} {1}' -f $name, $value }
+function Report([string] $name, [string] $value) { '{0,-46} {1}' -f $name, $value }
 
-R 'running as' ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
+Report 'running as' ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
 
-try { $n = [IO.File]::ReadAllBytes($GhFile).Length; R 'read gh token file (hosts.yml)' "READABLE ($n bytes)" }
-catch { R 'read gh token file (hosts.yml)' 'blocked' }
+try { $n = [IO.File]::ReadAllBytes($GhFile).Length; Report 'read gh token file (hosts.yml)' "READABLE ($n bytes)" }
+catch { Report 'read gh token file (hosts.yml)' 'blocked' }
 
-try { $null = Get-ChildItem -LiteralPath $SshDir -ErrorAction Stop; R 'list %USERPROFILE%\.ssh' 'READABLE' }
-catch { R 'list %USERPROFILE%\.ssh' 'blocked' }
+try { $null = Get-ChildItem -LiteralPath $SshDir -ErrorAction Stop; Report 'list %USERPROFILE%\.ssh' 'READABLE' }
+catch { Report 'list %USERPROFILE%\.ssh' 'blocked' }
 
-if ($env:CANARY_TOKEN) { R 'env var from the parent (CANARY_TOKEN)' 'VISIBLE' } else { R 'env var from the parent (CANARY_TOKEN)' 'not visible' }
+if ($env:CANARY_TOKEN) { Report 'env var from the parent (CANARY_TOKEN)' 'VISIBLE' } else { Report 'env var from the parent (CANARY_TOKEN)' 'not visible' }
 
 $cred = 'blocked'
 try {
@@ -32,16 +32,16 @@ public static class LabCred {
 '@
     if ([LabCred]::CanRead('riptides-canary')) { $cred = 'READABLE' } else { $cred = "blocked (win32 error $([Runtime.InteropServices.Marshal]::GetLastWin32Error()))" }
 } catch { $cred = "could not test ($($_.Exception.GetType().Name))" }
-R 'read Credential Manager entry' $cred
+Report 'read Credential Manager entry' $cred
 
-try { New-Item -ItemType File -Force -Path '.\workspace-canary' -ErrorAction Stop | Out-Null; R 'write inside the project' 'allowed' }
-catch { R 'write inside the project' 'blocked' }
+try { New-Item -ItemType File -Force -Path '.\workspace-canary' -ErrorAction Stop | Out-Null; Report 'write inside the project' 'allowed' }
+catch { Report 'write inside the project' 'blocked' }
 
-try { New-Item -ItemType File -Force -Path $OutsideFile -ErrorAction Stop | Out-Null; R 'write outside the project (profile)' 'ALLOWED' }
-catch { R 'write outside the project (profile)' 'blocked' }
+try { New-Item -ItemType File -Force -Path $OutsideFile -ErrorAction Stop | Out-Null; Report 'write outside the project (profile)' 'ALLOWED' }
+catch { Report 'write outside the project (profile)' 'blocked' }
 
 foreach ($h in 'api.github.com', 'example.com') {
     $code = & curl.exe -s -o NUL -w '%{http_code}' --max-time 8 "https://$h/" 2>$null
     $rc = $LASTEXITCODE
-    if ($rc -eq 0 -and $code -ne '000') { R "HTTPS to $h" "REACHABLE ($code)" } else { R "HTTPS to $h" "blocked (curl rc=$rc)" }
+    if ($rc -eq 0 -and $code -ne '000') { Report "HTTPS to $h" "REACHABLE ($code)" } else { Report "HTTPS to $h" "blocked (curl rc=$rc)" }
 }
