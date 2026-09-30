@@ -62,5 +62,5 @@ environment.
 
 ## Scope
 
-The Windows checks cover Codex CLI and Copilot CLI. GitHub-hosted runners run Windows Server as an
-administrator, which is not the same as a developer's Windows 11 laptop.
+The Windows checks cover Codex CLI and Copilot CLI. GitHub-hosted runners run as an
+administrator on CI images, which is not the same as a developer's laptop.
