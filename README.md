@@ -46,7 +46,21 @@ Notes:
   sampler saw the sandboxed connections they had closed, and Windows attributes those to
   the Idle process. Node's socket address shows the connection is direct, not proxied.
 
+### Copilot CLI, 2026-09-30 (1.0.89)
+
+`.github/workflows/copilot-windows.yml` runs the same checks through the Copilot agent
+with `sandbox.enabled` set to the policy `/sandbox enable` seeds, on `windows-11-arm`
+and `windows-latest`. Raw output: [`results/windows-2026-09-30-copilot-1.0.89`](results/windows-2026-09-30-copilot-1.0.89).
+
+| Runner | What happened |
+|-|-|
+| Windows 11 25H2, build 26200.9457, ARM64 | The sandbox refused every command, PowerShell and `cmd.exe` alike: *"This Windows host cannot run PowerShell in the sandbox. PowerShell needs Process Security Environment 1.1 filesystem enumeration support, which this host does not report."* |
+| Windows Server 2025, build 26100.33438 | The sandbox turned itself off and every command ran with full access: *"Sandboxing is disabled for this session because this host does not support it. Shell commands and sandboxed services will run unsandboxed. Your sandbox.enabled setting remains unchanged."* |
+
+Even unsandboxed, Copilot kept its own `COPILOT_GITHUB_TOKEN` out of the commands'
+environment.
+
 ## Scope
 
-The Windows checks cover Codex CLI. GitHub-hosted runners run Windows Server as an
+The Windows checks cover Codex CLI and Copilot CLI. GitHub-hosted runners run Windows Server as an
 administrator, which is not the same as a developer's Windows 11 laptop.

@@ -1,0 +1,18 @@
+=== copilot-sandbox (exit 0) ===
+✗ Run run-checks.ps1 script (sandboxed shell)
+  │ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run-checks.ps1
+  └ <error: GenericFailure, Sandboxing is enabled but this policy is not supported on this host:
+    This Windows host cannot run PowerShell in the sandbox. PowerShell needs Process Security
+    Environment 1.1 filesystem enumeration support, which this host does not report. Update Windows
+    to a version that supports it: https://aka.ms/ghcp-sandbox-os-support>
+    Failed with exit code 1
+
+The command could not run: the sandbox reported "Sandboxing is enabled but this policy is not supported on this host: This Windows host cannot run PowerShell in the sandbox. PowerShell needs Process Security Environment 1.1 filesystem enumeration support, which this host does not report. Update Windows to a version that supports it: https://aka.ms/ghcp-sandbox-os-support" (exit code 1).
+
+
+
+Changes    +0 -0
+AI Credits 2.86 (6s)
+Tokens     ↑ 45.3k (37.9k cached, 7.3k written) • ↓ 264 (10 reasoning)
+Resume     copilot --resume=96a24469-5db1-4c06-aaf0-4de556a6dc6f
+

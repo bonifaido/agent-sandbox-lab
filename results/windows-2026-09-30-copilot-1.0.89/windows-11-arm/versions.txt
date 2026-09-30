@@ -1,0 +1,1 @@
+copilot Package extraction took 6766ms | Windows 10 Enterprise 25H2 build 26200.9457 | ARM64 | runner win11-vs2026-arm64 20260920.164.1

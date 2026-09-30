@@ -1,0 +1,18 @@
+=== copilot-sandbox-cmd (exit 0) ===
+✗ Run run-checks.cmd (sandboxed shell)
+  │ cmd.exe /d /c run-checks.cmd
+  └ <error: GenericFailure, Sandboxing is enabled but this policy is not supported on this host:
+    This Windows host cannot run PowerShell in the sandbox. PowerShell needs Process Security
+    Environment 1.1 filesystem enumeration support, which this host does not report. Update Windows
+    to a version that supports it: https://aka.ms/ghcp-sandbox-os-support>
+    Failed with exit code 1
+
+This Windows host cannot run PowerShell in the sandbox. PowerShell needs Process Security Environment 1.1 filesystem enumeration support, which this host does not report. Update Windows to a version that supports it: https://aka.ms/ghcp-sandbox-os-support
+
+
+
+Changes    +0 -0
+AI Credits 2.83 (6s)
+Tokens     ↑ 45.2k (37.9k cached, 7.3k written) • ↓ 239 (51 reasoning)
+Resume     copilot --resume=f2f8de2c-6c17-493c-87aa-4a959f788ed7
+

@@ -1,0 +1,1 @@
+copilot GitHub Copilot CLI 1.0.89. | Windows Server 2025 Datacenter 24H2 build 26100.33438 | AMD64 | runner win25-vs2026 20260922.246.2
