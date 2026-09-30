@@ -1,0 +1,23 @@
+=== codex-elevated-workspace-write (exit 0) ===
+running as                                     runnervmfi6oq\CodexSandboxOffline
+read gh token file (hosts.yml)                 READABLE (71 bytes)
+list %USERPROFILE%\.ssh                        blocked
+env var from the parent (CANARY_TOKEN)         VISIBLE
+read Credential Manager entry                  blocked (win32 error 1168)
+write inside the project                       allowed
+write outside the project (profile)            blocked
+HTTPS to api.github.com                        blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to api.github.com port 443 after 6 ms: Could not connect to server At D...)
+HTTPS to example.com                           blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to example.com port 443 after 5 ms: Could not connect to server At D:\a...)
+HTTPS to api.github.com, no revocation check   blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to api.github.com port 443 after 4 ms: Could not connect to server At D...)
+HTTPS to api.github.com, ignoring proxy vars   blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to api.github.com port 443 after 4 ms: Could not connect to server At D...)
+plain HTTP to example.com                      blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to example.com port 80 after 4 ms: Could not connect to server At D:\a\...)
+HTTPS to api.github.com from node              blocked (error EACCES)
+Get-ChildItem : An item with the same key has already been added.
+At D:\a\agent-sandbox-lab\agent-sandbox-lab\windows\checks.ps1:61 char:33
++ Report 'proxy variables seen' ((Get-ChildItem env: | Where-Object { $ ...
++                                 ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Get-ChildItem], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.GetChildItemCommand
+ 
+owner of the api.github.com connection         none seen
+

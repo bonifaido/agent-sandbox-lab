@@ -1,0 +1,23 @@
+=== codex-unelevated-workspace-write (exit 0) ===
+running as                                     runnervmfi6oq\runneradmin
+read gh token file (hosts.yml)                 READABLE (71 bytes)
+list %USERPROFILE%\.ssh                        READABLE
+env var from the parent (CANARY_TOKEN)         VISIBLE
+read Credential Manager entry                  READABLE
+write inside the project                       allowed
+write outside the project (profile)            blocked
+HTTPS to api.github.com                        blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to api.github.com port 443 via 127.0.0.1 after 2016 ms: Could not conne...)
+HTTPS to example.com                           blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to example.com port 443 via 127.0.0.1 after 2005 ms: Could not connect ...)
+HTTPS to api.github.com, no revocation check   blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to api.github.com port 443 via 127.0.0.1 after 2015 ms: Could not conne...)
+HTTPS to api.github.com, ignoring proxy vars   blocked (curl rc=35: curl.exe : curl: (35) schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030E) - No creden...)
+plain HTTP to example.com                      blocked (curl rc=7: curl.exe : curl: (7) Failed to connect to example.com port 80 via 127.0.0.1 after 2017 ms: Could not connect t...)
+HTTPS to api.github.com from node              REACHABLE (HTTP 200 via 140.82.116.6)
+Get-ChildItem : An item with the same key has already been added.
+At D:\a\agent-sandbox-lab\agent-sandbox-lab\windows\checks.ps1:61 char:33
++ Report 'proxy variables seen' ((Get-ChildItem env: | Where-Object { $ ...
++                                 ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Get-ChildItem], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.Commands.GetChildItemCommand
+ 
+owner of the api.github.com connection         Idle
+

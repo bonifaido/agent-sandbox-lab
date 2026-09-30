@@ -1,0 +1,17 @@
+=== plain (exit 0) ===
+running as                                     runnervmfi6oq\runneradmin
+read gh token file (hosts.yml)                 READABLE (71 bytes)
+list %USERPROFILE%\.ssh                        READABLE
+env var from the parent (CANARY_TOKEN)         VISIBLE
+read Credential Manager entry                  READABLE
+write inside the project                       allowed
+write outside the project (profile)            ALLOWED
+HTTPS to api.github.com                        REACHABLE (200 via 20.29.134.17:443)
+HTTPS to example.com                           REACHABLE (200 via 104.20.23.154:443)
+HTTPS to api.github.com, no revocation check   REACHABLE (200 via 20.29.134.17:443)
+HTTPS to api.github.com, ignoring proxy vars   REACHABLE (200 via 20.29.134.17:443)
+plain HTTP to example.com                      REACHABLE (200 via 104.20.23.154:80)
+HTTPS to api.github.com from node              REACHABLE (HTTP 200 via 20.29.134.17)
+proxy variables seen                           
+owner of the api.github.com connection         curl
+

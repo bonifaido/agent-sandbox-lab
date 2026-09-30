@@ -1,0 +1,8 @@
+=== codex-elevated-default (exit 1) ===
+D:\a\agent-sandbox-lab\agent-sandbox-lab\windows\checks.ps1 : Cannot dot-source this command because it was defined in 
+a different language mode. To invoke this command without importing its contents, omit the '.' operator.
+    + CategoryInfo          : InvalidOperation: (:) [checks.ps1], NotSupportedException
+    + FullyQualifiedErrorId : DotSourceNotSupported,checks.ps1
+ 
+owner of the api.github.com connection         none seen
+
