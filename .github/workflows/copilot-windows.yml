@@ -1,0 +1,37 @@
+name: windows-copilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['windows/run-copilot.ps1', 'windows/checks.ps1', '.github/workflows/copilot-windows.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  copilot:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-11-arm, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Copilot CLI
+        shell: pwsh
+        run: npm install -g @github/copilot
+      - name: Run the checks plain and through Copilot's sandbox
+        shell: pwsh
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
+        run: ./windows/run-copilot.ps1 -OutDir results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-copilot-${{ matrix.os }}
+          path: results

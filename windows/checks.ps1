@@ -18,6 +18,8 @@ try { $null = Get-ChildItem -LiteralPath $SshDir -ErrorAction Stop; Report 'list
 catch { Report 'list %USERPROFILE%\.ssh' 'blocked' }
 
 if ($env:CANARY_TOKEN) { Report 'env var from the parent (CANARY_TOKEN)' 'VISIBLE' } else { Report 'env var from the parent (CANARY_TOKEN)' 'not visible' }
+$names = @(Get-ChildItem env: | Where-Object { $_.Name -match '^(GH_|GITHUB_|COPILOT_|GIT_)|TOKEN|SECRET|PASS' } | ForEach-Object { $_.Name } | Sort-Object)
+Report 'credential-looking env var names' ($names -join ' ')
 
 $cred = 'blocked'
 try {
