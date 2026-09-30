@@ -48,7 +48,5 @@ Notes:
 
 ## Scope
 
-GitHub-hosted runners run Windows Server as an administrator, which is not the same
-as a developer's Windows 11 laptop. Copilot CLI's Windows sandbox needs an Insiders
-build, and Gemini CLI and Copilot need a login, so they aren't covered yet. Cursor and
-Claude Code sandbox through WSL2 on Windows.
+The Windows checks cover Codex CLI. GitHub-hosted runners run Windows Server as an
+administrator, which is not the same as a developer's Windows 11 laptop.
